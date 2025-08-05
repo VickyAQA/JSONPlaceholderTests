@@ -39,7 +39,7 @@ def test_get_post_with_invalid_id(api_client):
 @allure.story("Позитивный: Получение поста с комментарием")
 def test_get_posts_comments(api_client):
     with allure.step("Отправка GET запроса к /posts"):
-        response = api_client.get_posts_comments(post_id=1)
+        response = api_client.get_posts_comments()
         data = response.json()
         if data:
             for item in data:

@@ -1,7 +1,7 @@
 import pytest
 import requests
 from core.clients.api_client import APIClient
-
+import random
 
 @pytest.fixture(scope="session")
 def api_client():
@@ -10,8 +10,8 @@ def api_client():
 
 
 @pytest.fixture()
-def create_post():
-    """Фикстура для создания поста."""
+def create_payload():
+    """Фикстура для создания ответа."""
 
     payload = {
         "userId": 1,
@@ -21,3 +21,7 @@ def create_post():
     }
     return payload
 
+@pytest.fixture
+def random_post_id():
+    """Фикстура, возвращающая случайный ID поста (от 1 до 100)."""
+    return random.randint(1, 100)

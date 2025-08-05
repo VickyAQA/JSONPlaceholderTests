@@ -3,8 +3,9 @@ import os
 from  dotenv import load_dotenv
 from core.settings.enviroments import Environment
 import allure
-load_dotenv()
 from core.clients.endpoints import Endpoints
+load_dotenv()
+
 
 class APIClient:
     def __init__(self):
@@ -25,40 +26,24 @@ class APIClient:
         else:
             raise ValueError(f"Unsupported environment: {environment}")
 
-    def get(self, endpoint, params=None, status_code=200):
-        url = self.base_url + endpoint
-        response = self.session.get(url, headers=self.session.headers, params=params)
-        if status_code:
-            assert response.status_code == status_code
-        return response.json()
-
     def get_all_posts(self):
         with allure.step("Получение всех постов"):
-            return self.get(Endpoints.POSTS_ENDPOINT.value)
-
-    def post(self, endpoint, data=None, status_code=200):
-        url = self.base_url + endpoint
-        response = self.session.post(url, headers=self.session.headers, json=data)
-        if status_code:
-            assert response.status_code == status_code
-        return response.json()
-
-    def get_posts_by_id(self, posts_id):
-        with allure.step("Return posts by id"):
-            url = f"{self.base_url}{Endpoints.POSTS_ENDPOINT.value}/{posts_id}"
-            response = self.session.get(url, headers=self.session.headers)
-            if response.status_code == 404:
-                raise requests.exceptions.HTTPError(f"Post not found (status code: 404)", response=response)
-            elif response.status_code != 200:
-                raise requests.exceptions.HTTPError(f"Unexpected status code: {response.status_code}", response=response)
+            url = f"{self.base_url}{Endpoints.POSTS_ENDPOINT.value}"
+            response = self.session.get(url)
             response.raise_for_status()
             return response.json()
 
-    def get_posts_comments(self, status_code=200):
-        with allure.step("Return posts by id"):
-            url = f"{self.base_url}{Endpoints.POST_COMMENTS_ENDPOINT.value}"
-            response = self.session.get(url, headers=self.session.headers)
-            if status_code:
-                assert response.status_code == status_code
+    def get_posts_by_id(self, posts_id):
+        with allure.step("Получение поста по ID"):
+            url = f"{self.base_url}{Endpoints.POSTS_ENDPOINT.value}/{posts_id}"
+            response = self.session.get(url)
+            assert response.status_code == 200, f"Unexpected status code: {response.status_code}"
             return response.json()
+
+    def get_posts_comments(self, status_code=200, post_id=1):
+        with allure.step("Получение комментариев к постам"):
+            url = f"{self.base_url}/posts/{post_id}/comments"
+            response = self.session.get(url)
+            assert response.status_code == status_code, f"Unexpected status code: {response.status_code}"
+            return response
 

@@ -10,7 +10,7 @@ def api_client():
 
 
 @pytest.fixture()
-def create_payload():
+def create_publication():
     """Фикстура для создания ответа."""
 
     payload = {
@@ -21,7 +21,3 @@ def create_payload():
     }
     return payload
 
-@pytest.fixture
-def random_post_id():
-    """Фикстура, возвращающая случайный ID поста (от 1 до 100)."""
-    return random.randint(1, 100)

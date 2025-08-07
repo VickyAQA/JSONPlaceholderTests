@@ -26,24 +26,25 @@ class APIClient:
         else:
             raise ValueError(f"Unsupported environment: {environment}")
 
-    def get_all_posts(self):
+    def get_all_publications(self):
         with allure.step("Получение всех постов"):
             url = f"{self.base_url}{Endpoints.POSTS_ENDPOINT.value}"
             response = self.session.get(url)
             response.raise_for_status()
             return response.json()
 
-    def get_posts_by_id(self, posts_id):
+    def get_publication_by_id(self, posts_id):
         with allure.step("Получение поста по ID"):
             url = f"{self.base_url}{Endpoints.POSTS_ENDPOINT.value}/{posts_id}"
             response = self.session.get(url)
             assert response.status_code == 200, f"Unexpected status code: {response.status_code}"
             return response.json()
 
-    def get_posts_comments(self, status_code=200, post_id=1):
+    def get_publications_comments(self, status_code=200, post_id=1):
         with allure.step("Получение комментариев к постам"):
             url = f"{self.base_url}/posts/{post_id}/comments"
             response = self.session.get(url)
             assert response.status_code == status_code, f"Unexpected status code: {response.status_code}"
             return response
+
 
